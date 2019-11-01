@@ -82,7 +82,7 @@ class Tasks extends StatelessWidget {
     Task task = Task(title, description);
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddEditScreen(task: task)),
+      MaterialPageRoute(builder: (context) => AddEditScreen(task: task, id: id)),
     );
   }
 }
