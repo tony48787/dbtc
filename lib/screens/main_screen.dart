@@ -65,6 +65,13 @@ class Tasks extends StatelessWidget {
             return new ListView(
               children: snapshot.data.documents.map((DocumentSnapshot document) {
                 return new ListTile(
+                  leading: IconButton(
+                    icon: Icon(Icons.check_circle_outline),
+                    tooltip: 'Completed today',
+                    onPressed: () {
+                      print(document.data['title']);
+                    },
+                  ),
                   title: new Text(document['title']),
                   subtitle: new Text(document['description']),
                   onTap: () {

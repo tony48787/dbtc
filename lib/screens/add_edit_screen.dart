@@ -19,9 +19,6 @@ class AddEditScreen extends StatefulWidget {
   _AddEditScreenState createState() => _AddEditScreenState();
 
   void onSave(BuildContext context, String title, String description) async {
-    print(title);
-    print(description);
-
     if (isEditing) {
       await databaseReference.collection("tasks")
           .document(this.id)
@@ -51,8 +48,6 @@ class _AddEditScreenState extends State<AddEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -68,9 +63,9 @@ class _AddEditScreenState extends State<AddEditScreen> {
               TextFormField(
                 initialValue: isEditing ? widget.task.title : '',
                 autofocus: !isEditing,
-                style: textTheme.headline,
                 decoration: InputDecoration(
-                  hintText: "Name",
+                  border: OutlineInputBorder(),
+                  labelText: "Name",
                 ),
                 validator: (val) {
                   return val.trim().isEmpty
@@ -79,12 +74,13 @@ class _AddEditScreenState extends State<AddEditScreen> {
                 },
                 onSaved: (value) => _title = value,
               ),
+              SizedBox(height: 16,),
               TextFormField(
                 initialValue: isEditing ? widget.task.description : '',
-                maxLines: 10,
-                style: textTheme.subhead,
+                maxLines: 4,
                 decoration: InputDecoration(
-                  hintText: "Description",
+                  border: OutlineInputBorder(),
+                  labelText: "Description",
                 ),
                 onSaved: (value) => _description = value,
               )
