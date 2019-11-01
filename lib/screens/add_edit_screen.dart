@@ -36,6 +36,14 @@ class AddEditScreen extends StatefulWidget {
 
     Navigator.pop(context);
   }
+
+  void onDelete(BuildContext context) async {
+    await databaseReference.collection("tasks")
+      .document(this.id)
+      .delete();
+
+    Navigator.pop(context);
+  }
 }
 
 class _AddEditScreenState extends State<AddEditScreen> {
@@ -51,8 +59,21 @@ class _AddEditScreenState extends State<AddEditScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          isEditing ? "Edit" : "Add",
+          isEditing ? "Edit Task" : "New Task",
         ),
+        actions: <Widget>[
+          FlatButton(
+            textColor: Colors.white,
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                _formKey.currentState.save();
+                widget.onSave(context, _title, _description);
+              }
+            },
+            child: Text(isEditing ? "Save" : "Add"),
+            shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
+          )
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -74,7 +95,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                 },
                 onSaved: (value) => _title = value,
               ),
-              SizedBox(height: 16,),
+              SizedBox(height: 16),
               TextFormField(
                 initialValue: isEditing ? widget.task.description : '',
                 maxLines: 4,
@@ -83,20 +104,24 @@ class _AddEditScreenState extends State<AddEditScreen> {
                   labelText: "Description",
                 ),
                 onSaved: (value) => _description = value,
-              )
+              ),
+              SizedBox(height: 16),
+              isEditing ?
+                  SizedBox(
+                    width: double.infinity,
+                    child: RaisedButton(
+                      color: Colors.red,
+                      textColor: Colors.white,
+                      onPressed: () {
+                        widget.onDelete(context);
+                      },
+                      child: Text("Delete"),
+                    ),
+                  ) :
+                new Container(width: 0, height: 0)
             ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: isEditing ? "Save changes" : "Add task",
-        child: Icon(isEditing ? Icons.check : Icons.add),
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            _formKey.currentState.save();
-            widget.onSave(context, _title, _description);
-          }
-        },
       ),
     );
   }
