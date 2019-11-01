@@ -1,22 +1,42 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dbtc/models/Task.dart';
 import 'package:flutter/material.dart';
 
 typedef OnSaveCallback = Function(String task, String note);
 
 class AddEditScreen extends StatefulWidget {
+
+  final databaseReference = Firestore.instance;
   final Task task;
+  final String id;
   bool isEditing;
 
-  AddEditScreen({ this.task }) {
+  AddEditScreen({ this.task, this.id }) {
     isEditing = task != null;
   }
 
   @override
   _AddEditScreenState createState() => _AddEditScreenState();
 
-  void onSave(BuildContext context, String title, String description) {
+  void onSave(BuildContext context, String title, String description) async {
     print(title);
     print(description);
+
+    if (isEditing) {
+      await databaseReference.collection("tasks")
+          .document(this.id)
+          .updateData({
+            'title': title,
+            'description': description
+          });
+    } else {
+      await databaseReference.collection("tasks")
+          .add({
+        'title': title,
+        'description': description
+      });
+    }
+
     Navigator.pop(context);
   }
 }
