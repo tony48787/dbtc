@@ -4,6 +4,7 @@ import 'package:dbtc/screens/add_edit_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 final databaseReference = Firestore.instance;
 
@@ -15,9 +16,6 @@ class MainScreen extends StatefulWidget {
 
 
 class _MainScreenState extends State<MainScreen> {
-  int _counter = 0;
-  List<DocumentSnapshot> listData = new List<DocumentSnapshot>();
-
   void createRecord() {
       Navigator.push(
         context,
@@ -50,6 +48,8 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
+
+
 class Tasks extends StatelessWidget {
 
   @override
@@ -64,12 +64,34 @@ class Tasks extends StatelessWidget {
           default:
             return ListView(
               children: snapshot.data.documents.map((DocumentSnapshot document) {
+                String dateKey = new DateFormat("yyyy-MM-dd").format(DateTime.now());
+
+                List completions = document['completions'] as List;
+                bool isCompleted = completions != null && completions.contains(dateKey);
+
                 return ListTile(
                   leading: IconButton(
-                    icon: Icon(Icons.check_circle_outline),
+                    icon: Icon(isCompleted ? Icons.check_circle : Icons.check_circle_outline),
                     tooltip: 'Completed today',
                     onPressed: () {
-                      print(document.data['title']);
+                      if (isCompleted) {
+                        databaseReference
+                            .collection("tasks")
+                            .document(document.documentID)
+                            .updateData({
+                          'completions': FieldValue.arrayRemove([dateKey]),
+                          'streak': FieldValue.increment(-1),
+                        });
+                      } else {
+                        databaseReference
+                            .collection("tasks")
+                            .document(document.documentID)
+                            .updateData({
+                          'completions': FieldValue.arrayUnion([dateKey]),
+                          'streak': FieldValue.increment(1),
+                        });
+                      }
+
                     },
                   ),
                   title: Text(document['title']),
