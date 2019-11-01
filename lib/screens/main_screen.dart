@@ -58,13 +58,13 @@ class Tasks extends StatelessWidget {
       stream: Firestore.instance.collection('tasks').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError)
-          return new Text('Error: ${snapshot.error}');
+          return Text('Error: ${snapshot.error}');
         switch (snapshot.connectionState) {
           case ConnectionState.waiting: return new Text('Loading...');
           default:
-            return new ListView(
+            return ListView(
               children: snapshot.data.documents.map((DocumentSnapshot document) {
-                return new ListTile(
+                return ListTile(
                   leading: IconButton(
                     icon: Icon(Icons.check_circle_outline),
                     tooltip: 'Completed today',
@@ -72,8 +72,8 @@ class Tasks extends StatelessWidget {
                       print(document.data['title']);
                     },
                   ),
-                  title: new Text(document['title']),
-                  subtitle: new Text(document['description']),
+                  title: Text(document['title']),
+                  subtitle: Text(document['description']),
                   onTap: () {
                     editRecord(document.documentID, document['title'], document['description'], context);
                 },
