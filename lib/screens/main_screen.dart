@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dbtc/models/Task.dart';
 import 'package:dbtc/screens/add_edit_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -17,26 +18,7 @@ class _MainScreenState extends State<MainScreen> {
   int _counter = 0;
   List<DocumentSnapshot> listData = new List<DocumentSnapshot>();
 
-  void createRecord() async {
-//    await databaseReference.collection("tasks")
-//        .add({
-//      'title': 'Mastering Flutter',
-//      'description': 'Programming Guide for Dart'
-//    });
-//
-//    QuerySnapshot snapshot = await databaseReference
-//        .collection("tasks")
-//        .getDocuments();
-//
-//    setState(() {
-//      // This call to setState tells the Flutter framework that something has
-//      // changed in this State, which causes it to rerun the build method below
-//      // so that the display can reflect the updated values. If we changed
-//      // _counter without calling setState(), then the build method would not be
-//      // called again, and so nothing would appear to happen.
-//      listData = snapshot.documents;
-//
-//      _counter++;
+  void createRecord() {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => AddEditScreen()),
@@ -56,8 +38,9 @@ class _MainScreenState extends State<MainScreen> {
         // Here we take the value from the MainScreen object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text("Daily"),
+        centerTitle: true,
       ),
-      body: Text("ListView"),
+      body: Tasks(),
       floatingActionButton: FloatingActionButton(
         onPressed: createRecord,
         tooltip: 'Increment',
@@ -68,22 +51,38 @@ class _MainScreenState extends State<MainScreen> {
 }
 
 class Tasks extends StatelessWidget {
-  // backing data
-  final List<DocumentSnapshot> listData;
-
-  // In the constructor, require a Todo
-  Tasks({Key key, @required this.listData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: listData.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(listData[index].data["title"]),
-          subtitle: Text(listData[index].data["description"]),
-        );
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('tasks').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError)
+          return new Text('Error: ${snapshot.error}');
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting: return new Text('Loading...');
+          default:
+            return new ListView(
+              children: snapshot.data.documents.map((DocumentSnapshot document) {
+                return new ListTile(
+                  title: new Text(document['title']),
+                  subtitle: new Text(document['description']),
+                  onTap: () {
+                    editRecord(document.documentID, document['title'], document['description'], context);
+                },
+                );
+              }).toList(),
+            );
+        }
       },
+    );
+  }
+
+  void editRecord(String id, String title, String description, BuildContext context) {
+    Task task = Task(title, description);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddEditScreen(task: task)),
     );
   }
 }
