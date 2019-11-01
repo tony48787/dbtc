@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1051385634538",
+    "firebase_url": "https://dbtc-6a739.firebaseio.com",
+    "project_id": "dbtc-6a739",
+    "storage_bucket": "dbtc-6a739.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1051385634538:android:d228ef7d3771768a03c193",
+        "android_client_info": {
+          "package_name": "com.tonyprak.dbtc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1051385634538-467td9n81uoeumjatah34baui91o4k58.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAV4-5n6DyBfOPPhx-sEvqnZSKxLaEtPCw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1051385634538-467td9n81uoeumjatah34baui91o4k58.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
