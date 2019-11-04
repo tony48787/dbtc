@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dbtc/blocs/tasks/tasks_bloc.dart';
+import 'package:dbtc/blocs/tasks/tasks_event.dart';
+import 'package:dbtc/blocs/tasks/tasks_state.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/models/Task.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import 'add_edit_screen.dart';
@@ -43,48 +47,44 @@ class _HomeSubScreenState extends State<HomeSubScreen> {
 
 class Tasks extends StatelessWidget {
 
-  void editRecord(String id, String title, String description, BuildContext context) {
-    Task task = Task(title, description);
+  void editRecord(Task task, BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddEditScreen(task: task, id: id)),
+      MaterialPageRoute(builder: (context) => AddEditScreen(task: task, id: task.id)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('tasks').snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError)
-          return Text('Error: ${snapshot.error}');
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting: return new Text('Loading...');
-          default:
-            return ListView(
-              children: snapshot.data.documents.map((DocumentSnapshot document) {
-                String dateKey = new DateFormat("yyyy-MM-dd").format(DateTime.now());
+    BlocProvider.of<TasksBloc>(context).add(LoadTasks());
 
-                List completions = document['completions'] as List;
-                bool isCompleted = completions != null && completions.contains(dateKey);
+    return BlocBuilder<TasksBloc, TasksState>(
+        builder: (context, state) {
+          if (state is TasksLoadedState) {
+            return ListView(
+              children: state.tasks.map((task) {
+                String dateKey = new DateFormat("yyyy-MM-dd").format(DateTime.now());
+                bool isCompleted = task.completions != null && task.completions.contains(dateKey);
 
                 return ListTile(
                   leading: IconButton(
                     icon: Icon(isCompleted ? Icons.check_circle : Icons.check_circle_outline),
                     tooltip: AppLocalizations.of(context).translate('COMPLETE_TASK'),
                     onPressed: () {
+
                       if (isCompleted) {
                         databaseReference
                             .collection("tasks")
-                            .document(document.documentID)
+                            .document(task.id)
                             .updateData({
                           'completions': FieldValue.arrayRemove([dateKey]),
                           'streak': FieldValue.increment(-1),
                         });
+
                       } else {
                         databaseReference
                             .collection("tasks")
-                            .document(document.documentID)
+                            .document(task.id)
                             .updateData({
                           'completions': FieldValue.arrayUnion([dateKey]),
                           'streak': FieldValue.increment(1),
@@ -93,16 +93,18 @@ class Tasks extends StatelessWidget {
 
                     },
                   ),
-                  title: Text(document['title']),
-                  subtitle: Text(document['description']),
+                  title: Text(task.title),
+                  subtitle: Text(task.description),
                   onTap: () {
-                    editRecord(document.documentID, document['title'], document['description'], context);
+                    editRecord(task, context);
                   },
                 );
               }).toList(),
             );
+          }
+
+          return Text("Loading");
         }
-      },
     );
   }
 

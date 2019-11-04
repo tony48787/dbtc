@@ -24,6 +24,10 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
       yield* _mapLoadTasksToState();
     } else if (event is TasksUpdated) {
       yield* _mapTasksUpdatedToState(event);
+    } else if (event is UpdateTask) {
+      yield* _mapUpdateTaskToState(event);
+    } else if (event is AddTask) {
+      yield* _mapAddTaskToState(event);
     }
   }
 
@@ -37,6 +41,15 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
   Stream<TasksState> _mapTasksUpdatedToState(TasksUpdated event) async* {
     yield TasksLoadedState(event.tasks);
   }
+
+  Stream<TasksState> _mapUpdateTaskToState(UpdateTask event) async* {
+    _tasksRepository.updateTask(event.updatedTask);
+  }
+
+  Stream<TasksState> _mapAddTaskToState(AddTask event) async* {
+    _tasksRepository.addNewTask(event.task);
+  }
+
 
   @override
   void close() {

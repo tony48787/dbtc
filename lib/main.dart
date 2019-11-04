@@ -1,6 +1,9 @@
+import 'package:dbtc/blocs/tasks/tasks.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
+import 'package:dbtc/repository/TasksRepository.dart';
 import 'package:dbtc/screens/main_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() => runApp(MyApp());
@@ -32,7 +35,10 @@ class MyApp extends StatelessWidget {
 
         return supportedLocales.first;
       },
-      home: MainScreen(),
+      home: BlocProvider(
+        builder: (context) => TasksBloc(tasksRepository: FirebaseTasksRepository()),
+        child: MainScreen(),
+      ),
     );
   }
 

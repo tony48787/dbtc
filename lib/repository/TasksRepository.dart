@@ -37,8 +37,9 @@ class FirebaseTasksRepository extends TasksRepository {
 
   @override
   Future<void> updateTask(Task task) {
-    // TODO: implement updateTask
-    return null;
+    return tasksCollection
+        .document(task.id)
+        .updateData(task.toEntity().toDocument());
   }
 
 }
