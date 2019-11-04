@@ -1,3 +1,4 @@
+import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/screens/calendar_sub_screen.dart';
 import 'package:dbtc/screens/home_sub_screen.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daily'),
+        title: Text(AppLocalizations.of(context).translate('DAILY')),
         centerTitle: true,
       ),
       body: _children[_currentIndex],
@@ -37,11 +38,11 @@ class _MainScreenState extends State<MainScreen> {
         items: [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              title: Text('Home')
+              title: Text(AppLocalizations.of(context).translate('HOME'))
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              title: Text('Calendar')
+              icon: Icon(Icons.date_range),
+              title: Text(AppLocalizations.of(context).translate('CALENDAR'))
           )
         ],
       ),

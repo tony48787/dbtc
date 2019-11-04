@@ -1,7 +1,7 @@
+import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/screens/main_screen.dart';
 import 'package:flutter/material.dart';
-
-final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,11 +10,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      onGenerateTitle: (context) => AppLocalizations.of(context).translate('APP_TITLE'),
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      navigatorKey: navigatorKey,
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      supportedLocales: [
+        const Locale('en', ''),
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode &&
+              supportedLocale.countryCode == locale.countryCode) {
+            return supportedLocale;
+          }
+        }
+
+        return supportedLocales.first;
+      },
       home: MainScreen(),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/models/Task.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -32,7 +33,7 @@ class _HomeSubScreenState extends State<HomeSubScreen> {
       body: Tasks(),
       floatingActionButton: FloatingActionButton(
         onPressed: createRecord,
-        tooltip: 'Increment',
+        tooltip: AppLocalizations.of(context).translate('NEW_TASK'),
         child: Icon(Icons.add),
       ),
     );
@@ -70,7 +71,7 @@ class Tasks extends StatelessWidget {
                 return ListTile(
                   leading: IconButton(
                     icon: Icon(isCompleted ? Icons.check_circle : Icons.check_circle_outline),
-                    tooltip: 'Completed today',
+                    tooltip: AppLocalizations.of(context).translate('COMPLETE_TASK'),
                     onPressed: () {
                       if (isCompleted) {
                         databaseReference
