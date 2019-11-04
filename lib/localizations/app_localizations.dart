@@ -1,7 +1,5 @@
-
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart' show SynchronousFuture;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -43,8 +41,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 
   @override
   bool isSupported(Locale locale) {
-    // Include all of your supported language codes here
-    return ['en', 'sk'].contains(locale.languageCode);
+    return ['en'].contains(locale.languageCode);
   }
 
   @override

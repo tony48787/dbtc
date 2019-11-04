@@ -45,9 +45,11 @@ class AddEditScreen extends StatefulWidget {
 
     Navigator.pop(context);
   }
+
 }
 
 class _AddEditScreenState extends State<AddEditScreen> {
+
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String _title;
@@ -126,4 +128,5 @@ class _AddEditScreenState extends State<AddEditScreen> {
       ),
     );
   }
+
 }
