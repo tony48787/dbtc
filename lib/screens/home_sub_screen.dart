@@ -56,8 +56,6 @@ class Tasks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<TasksBloc>(context).add(LoadTasks());
-
     return BlocBuilder<TasksBloc, TasksState>(
         builder: (context, state) {
           if (state is TasksLoadedState) {

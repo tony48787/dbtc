@@ -73,7 +73,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                 widget.onSave(context, _title, _description);
               }
             },
-            child: Text(AppLocalizations.of(context).translate(isEditing ? 'SAVE' : 'ADD')),
+            child: Text(AppLocalizations.of(context).translate(isEditing ? 'SAVE' : 'ADD').toUpperCase()),
             shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
           )
         ],
@@ -113,7 +113,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: RaisedButton(
-                      color: Colors.red,
+                      color: Colors.redAccent,
                       textColor: Colors.white,
                       onPressed: () {
                         widget.onDelete(context);

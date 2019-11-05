@@ -1,8 +1,10 @@
+import 'package:dbtc/blocs/tasks/tasks.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/screens/calendar_sub_screen.dart';
 import 'package:dbtc/screens/home_sub_screen.dart';
 import 'package:dbtc/screens/settings_sub_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MainScreen extends StatefulWidget {
 
@@ -29,10 +31,11 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<TasksBloc>(context).add(LoadTasks());
+
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate('DAILY')),
-        centerTitle: true,
       ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
