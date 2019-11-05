@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dbtc/blocs/tasks/tasks_bloc.dart';
-import 'package:dbtc/blocs/tasks/tasks_event.dart';
-import 'package:dbtc/blocs/tasks/tasks_state.dart';
+import 'package:dbtc/blocs/habit/habit.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
-import 'package:dbtc/models/Task.dart';
+import 'package:dbtc/models/habit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -34,10 +32,10 @@ class _HomeSubScreenState extends State<HomeSubScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Tasks(),
+      body: Habits(),
       floatingActionButton: FloatingActionButton(
         onPressed: createRecord,
-        tooltip: AppLocalizations.of(context).translate('NEW_TASK'),
+        tooltip: AppLocalizations.of(context).translate('NEW_HABIT'),
         child: Icon(Icons.add),
       ),
     );
@@ -45,35 +43,35 @@ class _HomeSubScreenState extends State<HomeSubScreen> {
 
 }
 
-class Tasks extends StatelessWidget {
+class Habits extends StatelessWidget {
 
-  void editRecord(Task task, BuildContext context) {
+  void editRecord(Habit habit, BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddEditScreen(task: task, id: task.id)),
+      MaterialPageRoute(builder: (context) => AddEditScreen(habit: habit, id: habit.id)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TasksBloc, TasksState>(
+    return BlocBuilder<HabitBloc, HabitState>(
         builder: (context, state) {
-          if (state is TasksLoadedState) {
+          if (state is HabitsLoadedState) {
             return ListView(
-              children: state.tasks.map((task) {
+              children: state.habits.map((habit) {
                 String dateKey = new DateFormat("yyyy-MM-dd").format(DateTime.now());
-                bool isCompleted = task.completions != null && task.completions.contains(dateKey);
+                bool isCompleted = habit.completions != null && habit.completions.contains(dateKey);
 
                 return ListTile(
                   leading: IconButton(
                     icon: Icon(isCompleted ? Icons.check_circle : Icons.check_circle_outline),
-                    tooltip: AppLocalizations.of(context).translate('COMPLETE_TASK'),
+                    tooltip: AppLocalizations.of(context).translate('COMPLETE_HABIT'),
                     onPressed: () {
 
                       if (isCompleted) {
                         databaseReference
-                            .collection("tasks")
-                            .document(task.id)
+                            .collection("habits")
+                            .document(habit.id)
                             .updateData({
                           'completions': FieldValue.arrayRemove([dateKey]),
                           'streak': FieldValue.increment(-1),
@@ -81,8 +79,8 @@ class Tasks extends StatelessWidget {
 
                       } else {
                         databaseReference
-                            .collection("tasks")
-                            .document(task.id)
+                            .collection("habits")
+                            .document(habit.id)
                             .updateData({
                           'completions': FieldValue.arrayUnion([dateKey]),
                           'streak': FieldValue.increment(1),
@@ -91,10 +89,10 @@ class Tasks extends StatelessWidget {
 
                     },
                   ),
-                  title: Text(task.title),
-                  subtitle: Text(task.description),
+                  title: Text(habit.title),
+                  subtitle: Text(habit.description),
                   onTap: () {
-                    editRecord(task, context);
+                    editRecord(habit, context);
                   },
                 );
               }).toList(),

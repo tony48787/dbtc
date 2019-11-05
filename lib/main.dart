@@ -1,6 +1,6 @@
-import 'package:dbtc/blocs/tasks/tasks.dart';
+import 'package:dbtc/blocs/habit/habit.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
-import 'package:dbtc/repository/TasksRepository.dart';
+import 'package:dbtc/repository/habit_repository.dart';
 import 'package:dbtc/screens/main_screen.dart';
 import 'package:dbtc/ui/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +20,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<ThemeBloc>(
           builder: (context) => ThemeBloc(),
         ),
-        BlocProvider<TasksBloc>(
-          builder: (context) => TasksBloc(tasksRepository: FirebaseTasksRepository())
+        BlocProvider<HabitBloc>(
+          builder: (context) => HabitBloc(habitRepository: FirebaseHabitRepository())
         )
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(

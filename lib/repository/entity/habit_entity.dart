@@ -1,21 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-class TaskEntity extends Equatable {
+class HabitEntity extends Equatable {
   final String documentId;
   final String title;
   final String description;
   final List<dynamic> completions;
   final int streak;
 
-  const TaskEntity(this.documentId, this.title, this.description, this.completions, this.streak);
+  const HabitEntity(this.documentId, this.title, this.description, this.completions, this.streak);
 
   @override
   List<Object> get props => [title, description];
 
   @override
   String toString() {
-    return 'TaskEntity { documentId: $documentId, title: $title, description: $description, completions: $completions, streak: $streak}';
+    return 'HabitEntity { documentId: $documentId, title: $title, description: $description, completions: $completions, streak: $streak}';
   }
 
   Map<String, Object> toDocument() {
@@ -27,8 +27,8 @@ class TaskEntity extends Equatable {
     };
   }
 
-  static TaskEntity fromSnapshot(DocumentSnapshot snapshot) {
-    return TaskEntity (
+  static HabitEntity fromSnapshot(DocumentSnapshot snapshot) {
+    return HabitEntity (
         snapshot.documentID,
         snapshot.data['title'],
         snapshot.data['description'],

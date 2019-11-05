@@ -1,4 +1,4 @@
-import 'package:dbtc/blocs/tasks/tasks.dart';
+import 'package:dbtc/blocs/habit/habit.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/screens/calendar_sub_screen.dart';
 import 'package:dbtc/screens/home_sub_screen.dart';
@@ -31,7 +31,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<TasksBloc>(context).add(LoadTasks());
+    BlocProvider.of<HabitBloc>(context).add(LoadHabits());
 
     return Scaffold(
       appBar: AppBar(

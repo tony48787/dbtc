@@ -1,19 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
-import 'package:dbtc/models/Task.dart';
+import 'package:dbtc/models/habit.dart';
 import 'package:flutter/material.dart';
 
-typedef OnSaveCallback = Function(String task, String note);
+typedef OnSaveCallback = Function(String habit, String note);
 
 class AddEditScreen extends StatefulWidget {
 
   final databaseReference = Firestore.instance;
-  final Task task;
+  final Habit habit;
   final String id;
   bool isEditing;
 
-  AddEditScreen({ this.task, this.id }) {
-    isEditing = task != null;
+  AddEditScreen({ this.habit, this.id }) {
+    isEditing = habit != null;
   }
 
   @override
@@ -21,14 +21,14 @@ class AddEditScreen extends StatefulWidget {
 
   void onSave(BuildContext context, String title, String description) async {
     if (isEditing) {
-      await databaseReference.collection("tasks")
+      await databaseReference.collection("habits")
           .document(this.id)
           .updateData({
             'title': title,
             'description': description
           });
     } else {
-      await databaseReference.collection("tasks")
+      await databaseReference.collection("habits")
           .add({
         'title': title,
         'description': description
@@ -39,7 +39,7 @@ class AddEditScreen extends StatefulWidget {
   }
 
   void onDelete(BuildContext context) async {
-    await databaseReference.collection("tasks")
+    await databaseReference.collection("habits")
       .document(this.id)
       .delete();
 
@@ -62,7 +62,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate(isEditing ? 'EDIT_TASK' : 'NEW_TASK'),
+          AppLocalizations.of(context).translate(isEditing ? 'EDIT_HABIT' : 'NEW_HABIT'),
         ),
         actions: <Widget>[
           FlatButton(
@@ -85,7 +85,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
           child: ListView(
             children: [
               TextFormField(
-                initialValue: isEditing ? widget.task.title : '',
+                initialValue: isEditing ? widget.habit.title : '',
                 autofocus: !isEditing,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -100,7 +100,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
               ),
               SizedBox(height: 16),
               TextFormField(
-                initialValue: isEditing ? widget.task.description : '',
+                initialValue: isEditing ? widget.habit.description : '',
                 maxLines: 4,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
