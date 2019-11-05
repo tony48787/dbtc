@@ -103,7 +103,7 @@ class _CalendarSubScreenState extends State<CalendarSubScreen> with TickerProvid
           return Container(
             margin: const EdgeInsets.all(6.0),
             decoration: BoxDecoration(
-              color: Colors.grey,
+              color: Theme.of(context).backgroundColor,
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -121,10 +121,9 @@ class _CalendarSubScreenState extends State<CalendarSubScreen> with TickerProvid
 //              Center(
 //                child: Container(
 //                  decoration: BoxDecoration(
-////                    color: Colors.blue,
 //                    shape: BoxShape.circle,
 //                    border: Border.all(
-//                        color: Colors.blue,
+//                        color: Theme.of(context).accentColor,
 //                        width: 2,
 //                        style: BorderStyle.solid
 //                    )
@@ -139,7 +138,7 @@ class _CalendarSubScreenState extends State<CalendarSubScreen> with TickerProvid
               Center(
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: Theme.of(context).accentColor,
                       shape: BoxShape.circle
                   ),
                   width: 36,

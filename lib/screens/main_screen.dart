@@ -1,6 +1,7 @@
 import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/screens/calendar_sub_screen.dart';
 import 'package:dbtc/screens/home_sub_screen.dart';
+import 'package:dbtc/screens/settings_sub_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -13,9 +14,11 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
 
   int _currentIndex = 0;
+
   final List<Widget> _children = [
     HomeSubScreen(),
-    CalendarSubScreen()
+    CalendarSubScreen(),
+    SettingsSubScreen()
   ];
 
   void onTabTapped(int index) {
@@ -43,11 +46,14 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
               icon: Icon(Icons.date_range),
               title: Text(AppLocalizations.of(context).translate('CALENDAR'))
-          )
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              title: Text(AppLocalizations.of(context).translate('SETTINGS'))
+          ),
         ],
       ),
     );
-
   }
 
 }

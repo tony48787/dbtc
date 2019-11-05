@@ -10,5 +10,6 @@
   "DESCRIPTION": "Description",
   "DELETE": "Delete",
   "SAVE": "Save",
-  "ADD": "Add"
+  "ADD": "Add",
+  "SETTINGS": "Settings"
 }
