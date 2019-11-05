@@ -1,22 +1,13 @@
 import 'package:dbtc/models/Task.dart';
-import 'package:equatable/equatable.dart';
 
-abstract class TasksEvent extends Equatable {
-  const TasksEvent();
-
-  @override
-  List<Object> get props => [];
-}
+abstract class TasksEvent {}
 
 class LoadTasks extends TasksEvent {}
 
 class AddTask extends TasksEvent {
   final Task task;
 
-  const AddTask(this.task);
-
-  @override
-  List<Object> get props => [task];
+  AddTask(this.task);
 
   @override
   String toString() => 'AddTask { task: $task }';
@@ -25,10 +16,7 @@ class AddTask extends TasksEvent {
 class UpdateTask extends TasksEvent {
   final Task updatedTask;
 
-  const UpdateTask(this.updatedTask);
-
-  @override
-  List<Object> get props => [updatedTask];
+  UpdateTask(this.updatedTask);
 
   @override
   String toString() => 'UpdateTask { updatedTask: $updatedTask }';
@@ -37,8 +25,5 @@ class UpdateTask extends TasksEvent {
 class TasksUpdated extends TasksEvent {
   final List<Task> tasks;
 
-  const TasksUpdated(this.tasks);
-
-  @override
-  List<Object> get props => [tasks];
+  TasksUpdated(this.tasks);
 }
