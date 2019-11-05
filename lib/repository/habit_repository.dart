@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dbtc/models/habit.dart';
-import 'package:dbtc/repository/entity/habit_entity.dart';
 
 abstract class HabitRepository {
   Future<void> addNewHabit(Habit habit);
@@ -17,7 +16,7 @@ class FirebaseHabitRepository extends HabitRepository {
 
   @override
   Future<void> addNewHabit(Habit habit) {
-    return habitsCollection.add(habit.toEntity().toDocument());
+    return habitsCollection.add(Habit.toDocument(habit));
   }
 
   @override
@@ -30,7 +29,7 @@ class FirebaseHabitRepository extends HabitRepository {
   Stream<List<Habit>> habits() {
     return habitsCollection.snapshots().map((snapshot) {
       return snapshot.documents
-          .map((doc) => Habit.fromEntity(HabitEntity.fromSnapshot(doc)))
+          .map((doc) => Habit.fromSnapshot(doc))
           .toList();
     });
   }
@@ -39,7 +38,7 @@ class FirebaseHabitRepository extends HabitRepository {
   Future<void> updateHabit(Habit habit) {
     return habitsCollection
         .document(habit.id)
-        .updateData(habit.toEntity().toDocument());
+        .updateData(Habit.toDocument(habit));
   }
 
 }

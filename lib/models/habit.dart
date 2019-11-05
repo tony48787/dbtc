@@ -1,4 +1,4 @@
-import 'package:dbtc/repository/entity/habit_entity.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class Habit {
@@ -15,20 +15,6 @@ class Habit {
     return 'Habit { id: $id, title: $title, description: $description, completions: $completions, streak: $streak }';
   }
 
-  HabitEntity toEntity() {
-    return HabitEntity(id, title, description, completions, streak);
-  }
-
-  static Habit fromEntity(HabitEntity entity) {
-    return Habit (
-      entity.documentId,
-      entity.title,
-      entity.description,
-      entity.completions,
-      entity.streak
-    );
-  }
-
   Habit copyWith({String id, String title, String description, List<String> completions, int streak}) {
     return Habit(
       id ?? this.id,
@@ -38,4 +24,24 @@ class Habit {
       streak ?? this.streak,
     );
   }
+
+  static Habit fromSnapshot(DocumentSnapshot snapshot) {
+    return Habit (
+      snapshot.documentID,
+      snapshot.data['title'],
+      snapshot.data['description'],
+      snapshot.data['completions'],
+      snapshot.data['streak'],
+    );
+  }
+
+  static Map<String, Object> toDocument(Habit habit) {
+    return {
+      'title': habit.title,
+      'description': habit.description,
+      'completions': habit.completions,
+      'streak': habit.streak,
+    };
+  }
+
 }
