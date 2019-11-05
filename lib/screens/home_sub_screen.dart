@@ -70,7 +70,7 @@ class Habits extends StatelessWidget {
 
                       if (isCompleted) {
                         databaseReference
-                            .collection("habits")
+                            .collection("tasks")
                             .document(habit.id)
                             .updateData({
                           'completions': FieldValue.arrayRemove([dateKey]),
@@ -79,7 +79,7 @@ class Habits extends StatelessWidget {
 
                       } else {
                         databaseReference
-                            .collection("habits")
+                            .collection("tasks")
                             .document(habit.id)
                             .updateData({
                           'completions': FieldValue.arrayUnion([dateKey]),

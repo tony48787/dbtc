@@ -16,7 +16,7 @@ class SettingsSubScreen extends StatelessWidget {
           },
         ),
       ],
-    );;
+    );
   }
 
 }

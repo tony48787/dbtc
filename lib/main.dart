@@ -1,6 +1,8 @@
 import 'package:dbtc/blocs/habit/habit.dart';
+import 'package:dbtc/blocs/user/user.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/repository/habit_repository.dart';
+import 'package:dbtc/repository/user_repository.dart';
 import 'package:dbtc/screens/main_screen.dart';
 import 'package:dbtc/ui/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -20,17 +22,27 @@ class MyApp extends StatelessWidget {
         BlocProvider<ThemeBloc>(
           builder: (context) => ThemeBloc(),
         ),
+        BlocProvider<UserBloc>(
+          builder: (context) => UserBloc(userRepository: UserRepository()),
+        ),
         BlocProvider<HabitBloc>(
           builder: (context) => HabitBloc(habitRepository: FirebaseHabitRepository())
         )
       ],
-      child: BlocBuilder<ThemeBloc, ThemeState>(
-        builder: _buildWithTheme,
+      child: BlocListener<UserBloc, UserState>(
+        listener: (context, state) {
+          print(state.runtimeType);
+        },
+        child: BlocBuilder<ThemeBloc, ThemeState>(
+          builder: _buildWithTheme,
+        ),
       )
     );
   }
 
   Widget _buildWithTheme(BuildContext context, ThemeState state) {
+    BlocProvider.of<UserBloc>(context).add(LoadUser("uiIb0swwBbF2gcI0DrsO"));
+
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).translate('APP_TITLE'),
       theme: appThemeData[state.appTheme],

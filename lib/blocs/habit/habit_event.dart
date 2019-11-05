@@ -2,6 +2,7 @@ import 'package:dbtc/models/habit.dart';
 
 abstract class HabitEvent {}
 
+// ACTIONS
 class LoadHabits extends HabitEvent {}
 
 class AddHabit extends HabitEvent {
@@ -22,6 +23,7 @@ class UpdateHabit extends HabitEvent {
   String toString() => 'UpdateHabit { updatedHabit: $updatedHabit }';
 }
 
+// EVENTS
 class HabitsUpdated extends HabitEvent {
   final List<Habit> habits;
 

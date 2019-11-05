@@ -21,14 +21,14 @@ class AddEditScreen extends StatefulWidget {
 
   void onSave(BuildContext context, String title, String description) async {
     if (isEditing) {
-      await databaseReference.collection("habits")
+      await databaseReference.collection("tasks")
           .document(this.id)
           .updateData({
             'title': title,
             'description': description
           });
     } else {
-      await databaseReference.collection("habits")
+      await databaseReference.collection("tasks")
           .add({
         'title': title,
         'description': description
@@ -39,7 +39,7 @@ class AddEditScreen extends StatefulWidget {
   }
 
   void onDelete(BuildContext context) async {
-    await databaseReference.collection("habits")
+    await databaseReference.collection("tasks")
       .document(this.id)
       .delete();
 

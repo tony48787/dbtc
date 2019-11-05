@@ -8,11 +8,7 @@ class HabitsLoadingState extends HabitState {}
 
 class HabitsLoadedState extends HabitState {
   final List<Habit> habits;
-
-  const HabitsLoadedState([this.habits = const []]);
-
-  @override
-  String toString() => 'HabitsLoaded { habits: $habits }';
+  const HabitsLoadedState(this.habits);
 }
 
 class HabitsNotLoadedState extends HabitState {}
