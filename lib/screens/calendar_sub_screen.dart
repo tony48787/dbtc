@@ -110,13 +110,15 @@ class _CalendarSubScreenState extends State<CalendarSubScreen> with TickerProvid
   }
 
   BoxDecoration _buildBoxDecoration(DateTime date, List<Habit> habits) {
-    List<bool> completions = habits.map((habit) {
-      String dateKey = DateFormat('yyyy-MM-dd').format(date);
-      return habit.completedAtDate[dateKey] != null && habit.completedAtDate[dateKey];
-    }).toList();
+    List<bool> completions = habits
+        .where((habit) => habit.createdAt.isBefore(date))
+        .map((habit) {
+          String dateKey = DateFormat('yyyy-MM-dd').format(date);
+          return habit.completedAtDate[dateKey] != null && habit.completedAtDate[dateKey];
+        }).toList();
 
-    bool isIncomplete = completions.every((completion) => !completion);
-    bool isComplete = completions.every((completion) => completion);
+    bool isIncomplete = completions.isEmpty || completions.every((completion) => !completion);
+    bool isComplete = completions.isNotEmpty && completions.every((completion) => completion);
     bool isPartial = !isComplete && !isIncomplete;
 
     if (isPartial) {

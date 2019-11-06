@@ -15,7 +15,7 @@ class HabitRepository {
   }
 
   Future<void> addNewHabit(Habit habit) {
-    return habitsCollection.add(Habit.toDocument(habit));
+    return habitsCollection.add(Habit.toDocument(habit, isAdd: true));
   }
 
   Future<void> deleteHabit(String habitId) {
