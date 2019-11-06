@@ -1,5 +1,6 @@
 import 'package:dbtc/blocs/habit/habit.dart';
 import 'package:dbtc/models/habit.dart';
+import 'package:dbtc/screens/habit_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -28,8 +29,14 @@ class _CalendarSubScreenState extends State<CalendarSubScreen> with TickerProvid
     super.dispose();
   }
 
-  void _onDaySelected(DateTime day, List events) {
-    print('CALLBACK: _onDaySelected');
+  void _onDaySelected(DateTime date, List<Habit> habits) {
+    List<Habit> habitsForDay = habits.where((habit) => habit.createdAt.isBefore(date)).toList();
+    if (habitsForDay.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HabitListScreen(date, habitsForDay)),
+      );
+    }
   }
 
   @override
@@ -89,7 +96,7 @@ class _CalendarSubScreenState extends State<CalendarSubScreen> with TickerProvid
         }
       ),
       onDaySelected: (date, events) {
-        _onDaySelected(date, events);
+        _onDaySelected(date, habits);
       },
     );
   }
