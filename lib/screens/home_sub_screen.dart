@@ -53,7 +53,7 @@ class Habits extends StatelessWidget {
           if (state is HabitsLoadedState) {
             return ListView(
               children: state.habits.map((habit) {
-                String dateKey = new DateFormat("yyyy-MM-dd").format(DateTime.now());
+                String dateKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
                 Map<String, bool> completedAtDate = habit.completedAtDate ?? Map();
                 bool isCompleted = completedAtDate[dateKey] != null && completedAtDate[dateKey];
 
@@ -78,7 +78,7 @@ class Habits extends StatelessWidget {
             );
           }
 
-          return Text("Loading");
+          return Text('Loading');
         }
     );
   }
