@@ -25,46 +25,47 @@ class MyApp extends StatelessWidget {
         BlocProvider<UserBloc>(
           builder: (context) => UserBloc(userRepository: UserRepository()),
         ),
-        BlocProvider<HabitBloc>(
-          builder: (context) => HabitBloc(habitRepository: FirebaseHabitRepository())
-        )
       ],
-      child: BlocListener<UserBloc, UserState>(
-        listener: (context, state) {
-          print(state.runtimeType);
-        },
-        child: BlocBuilder<ThemeBloc, ThemeState>(
-          builder: _buildWithTheme,
-        ),
-      )
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: _buildWithTheme,
+      ),
     );
   }
 
-  Widget _buildWithTheme(BuildContext context, ThemeState state) {
+  Widget _buildWithTheme(BuildContext context, ThemeState themeState) {
     BlocProvider.of<UserBloc>(context).add(LoadUser("uiIb0swwBbF2gcI0DrsO"));
 
-    return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context).translate('APP_TITLE'),
-      theme: appThemeData[state.appTheme],
-      localizationsDelegates: [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
-      ],
-      supportedLocales: [
-        const Locale('en', ''),
-      ],
-      localeResolutionCallback: (locale, supportedLocales) {
-        for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale.languageCode &&
-              supportedLocale.countryCode == locale.countryCode) {
-            return supportedLocale;
-          }
-        }
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, userState) => _buildWithUser(context, themeState, userState)
+    );
+  }
 
-        return supportedLocales.first;
-      },
-      home: MainScreen(),
+  Widget _buildWithUser(BuildContext context, ThemeState themeState, UserState userState) {
+    return BlocProvider<HabitBloc>(
+      builder: (context) => HabitBloc(habitRepository: HabitRepository("uiIb0swwBbF2gcI0DrsO")),
+      child: MaterialApp(
+        onGenerateTitle: (context) => AppLocalizations.of(context).translate('APP_TITLE'),
+        theme: appThemeData[themeState.appTheme],
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate
+        ],
+        supportedLocales: [
+          const Locale('en', ''),
+        ],
+        localeResolutionCallback: (locale, supportedLocales) {
+          for (var supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale.languageCode &&
+                supportedLocale.countryCode == locale.countryCode) {
+              return supportedLocale;
+            }
+          }
+
+          return supportedLocales.first;
+        },
+        home: MainScreen(),
+      ),
     );
   }
 

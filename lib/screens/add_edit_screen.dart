@@ -1,13 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dbtc/blocs/habit/habit.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/models/habit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 typedef OnSaveCallback = Function(String habit, String note);
 
 class AddEditScreen extends StatefulWidget {
 
-  final databaseReference = Firestore.instance;
   final Habit habit;
   final String id;
   bool isEditing;
@@ -19,29 +19,20 @@ class AddEditScreen extends StatefulWidget {
   @override
   _AddEditScreenState createState() => _AddEditScreenState();
 
-  void onSave(BuildContext context, String title, String description) async {
+  void onSave(BuildContext context, String title, String description) {
     if (isEditing) {
-      await databaseReference.collection("tasks")
-          .document(this.id)
-          .updateData({
-            'title': title,
-            'description': description
-          });
+      Habit newHabit = habit.copyWith(title: title, description: description);
+      BlocProvider.of<HabitBloc>(context).add(UpdateHabit(newHabit));
     } else {
-      await databaseReference.collection("tasks")
-          .add({
-        'title': title,
-        'description': description
-      });
+      Habit newHabit = Habit(null, title, description, Map());
+      BlocProvider.of<HabitBloc>(context).add(AddHabit(newHabit));
     }
 
     Navigator.pop(context);
   }
 
-  void onDelete(BuildContext context) async {
-    await databaseReference.collection("tasks")
-      .document(this.id)
-      .delete();
+  void onDelete(BuildContext context) {
+    BlocProvider.of<HabitBloc>(context).add(DeleteHabit(habit.id));
 
     Navigator.pop(context);
   }

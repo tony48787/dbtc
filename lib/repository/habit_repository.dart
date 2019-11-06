@@ -1,31 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dbtc/models/habit.dart';
 
-abstract class HabitRepository {
-  Future<void> addNewHabit(Habit habit);
+class HabitRepository {
 
-  Future<void> deleteHabit(Habit habit);
+  CollectionReference habitsCollection;
+  String userId;
 
-  Stream<List<Habit>> habits();
+  HabitRepository(String userId) {
+    this.userId = userId;
+    this.habitsCollection = Firestore.instance
+        .collection("users")
+        .document(userId)
+        .collection("habits");
+  }
 
-  Future<void> updateHabit(Habit habit);
-}
-
-class FirebaseHabitRepository extends HabitRepository {
-  final habitsCollection = Firestore.instance.collection("tasks");
-
-  @override
   Future<void> addNewHabit(Habit habit) {
     return habitsCollection.add(Habit.toDocument(habit));
   }
 
-  @override
-  Future<void> deleteHabit(Habit habit) {
-    // TODO: implement deleteHabit
-    return null;
+  Future<void> deleteHabit(String habitId) {
+    return habitsCollection.document(habitId).delete();
   }
 
-  @override
   Stream<List<Habit>> habits() {
     return habitsCollection.snapshots().map((snapshot) {
       return snapshot.documents
@@ -34,7 +30,6 @@ class FirebaseHabitRepository extends HabitRepository {
     });
   }
 
-  @override
   Future<void> updateHabit(Habit habit) {
     return habitsCollection
         .document(habit.id)

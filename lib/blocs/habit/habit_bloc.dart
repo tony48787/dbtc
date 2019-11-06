@@ -26,6 +26,8 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
       yield* _mapUpdateHabitToState(event);
     } else if (event is AddHabit) {
       yield* _mapAddHabitToState(event);
+    } else if (event is DeleteHabit) {
+      yield* _mapDeleteHabitToState(event);
     }
   }
 
@@ -46,6 +48,10 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
 
   Stream<HabitState> _mapAddHabitToState(AddHabit event) async* {
     _habitRepository.addNewHabit(event.habit);
+  }
+
+  Stream<HabitState> _mapDeleteHabitToState(DeleteHabit event) async* {
+    _habitRepository.deleteHabit(event.habitId);
   }
 
 

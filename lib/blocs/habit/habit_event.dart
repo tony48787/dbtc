@@ -23,6 +23,11 @@ class UpdateHabit extends HabitEvent {
   String toString() => 'UpdateHabit { updatedHabit: $updatedHabit }';
 }
 
+class DeleteHabit extends HabitEvent {
+  final String habitId;
+  DeleteHabit(this.habitId);
+}
+
 // EVENTS
 class HabitsUpdated extends HabitEvent {
   final List<Habit> habits;

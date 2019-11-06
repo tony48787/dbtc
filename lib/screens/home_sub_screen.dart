@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dbtc/blocs/habit/habit.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/models/habit.dart';
@@ -8,8 +7,6 @@ import 'package:intl/intl.dart';
 
 import 'add_edit_screen.dart';
 
-final databaseReference = Firestore.instance;
-
 class HomeSubScreen extends StatefulWidget {
 
   @override
@@ -17,10 +14,7 @@ class HomeSubScreen extends StatefulWidget {
 
 }
 
-
 class _HomeSubScreenState extends State<HomeSubScreen> {
-
-  List<DocumentSnapshot> listData = new List<DocumentSnapshot>();
 
   void createRecord() {
     Navigator.push(
@@ -60,33 +54,18 @@ class Habits extends StatelessWidget {
             return ListView(
               children: state.habits.map((habit) {
                 String dateKey = new DateFormat("yyyy-MM-dd").format(DateTime.now());
-                bool isCompleted = habit.completions != null && habit.completions.contains(dateKey);
+                Map<String, bool> completedAtDate = habit.completedAtDate ?? Map();
+                bool isCompleted = completedAtDate[dateKey] != null && completedAtDate[dateKey];
 
                 return ListTile(
                   leading: IconButton(
                     icon: Icon(isCompleted ? Icons.check_circle : Icons.check_circle_outline),
                     tooltip: AppLocalizations.of(context).translate('COMPLETE_HABIT'),
                     onPressed: () {
+                      isCompleted ? completedAtDate.remove(dateKey) : completedAtDate[dateKey] = true;
 
-                      if (isCompleted) {
-                        databaseReference
-                            .collection("tasks")
-                            .document(habit.id)
-                            .updateData({
-                          'completions': FieldValue.arrayRemove([dateKey]),
-                          'streak': FieldValue.increment(-1),
-                        });
-
-                      } else {
-                        databaseReference
-                            .collection("tasks")
-                            .document(habit.id)
-                            .updateData({
-                          'completions': FieldValue.arrayUnion([dateKey]),
-                          'streak': FieldValue.increment(1),
-                        });
-                      }
-
+                      Habit newHabit = habit.copyWith(completedAtDate: completedAtDate);
+                      BlocProvider.of<HabitBloc>(context).add(UpdateHabit(newHabit));
                     },
                   ),
                   title: Text(habit.title),

@@ -4,23 +4,21 @@ class Habit {
   final String id;
   final String title;
   final String description;
-  final List<dynamic> completions;
-  final int streak;
+  final Map<String, bool> completedAtDate;
 
-  const Habit(this.id, this.title, this.description, this.completions, this.streak);
+  const Habit(this.id, this.title, this.description, this.completedAtDate);
 
   @override
   String toString() {
-    return 'Habit { id: $id, title: $title, description: $description, completions: $completions, streak: $streak }';
+    return 'Habit { id: $id, title: $title, description: $description, completedAtDate: $completedAtDate }';
   }
 
-  Habit copyWith({String id, String title, String description, List<String> completions, int streak}) {
+  Habit copyWith({ String id, String title, String description, Map<String, bool> completedAtDate }) {
     return Habit(
       id ?? this.id,
       title ?? this.title,
       description ?? this.description,
-      completions ?? this.completions,
-      streak ?? this.streak,
+      completedAtDate ?? this.completedAtDate,
     );
   }
 
@@ -29,8 +27,7 @@ class Habit {
       snapshot.documentID,
       snapshot.data['title'],
       snapshot.data['description'],
-      snapshot.data['completions'],
-      snapshot.data['streak'],
+      Map<String, bool>.from(snapshot.data['completedAtDate']),
     );
   }
 
@@ -38,8 +35,7 @@ class Habit {
     return {
       'title': habit.title,
       'description': habit.description,
-      'completions': habit.completions,
-      'streak': habit.streak,
+      'completedAtDate': habit.completedAtDate,
     };
   }
 
