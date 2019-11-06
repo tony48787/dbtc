@@ -11,5 +11,7 @@
   "DELETE": "Delete",
   "SAVE": "Save",
   "ADD": "Add",
-  "SETTINGS": "Settings"
+  "SETTINGS": "Settings",
+  "NOTIFICATION_TIME": "Notification Time",
+  "DARK_THEME": "Dark Theme"
 }
