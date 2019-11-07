@@ -14,7 +14,7 @@ class UserRepository {
     );
   }
 
-  Future<void> signUp({String email, String password}) async {
+  Future<AuthResult> signUp({String email, String password}) async {
     return await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
@@ -40,6 +40,12 @@ class UserRepository {
     return _usersCollection
         .document(user.id)
         .updateData(User.toDocument(user));
+  }
+
+  Future<void> setUser(User user) {
+    return _usersCollection
+        .document(user.id)
+        .setData(User.toDocument(user, isAdd: true));
   }
 
 }

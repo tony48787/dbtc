@@ -1,6 +1,7 @@
 import 'package:dbtc/blocs/auth/auth.dart';
 import 'package:dbtc/blocs/login/login.dart';
 import 'package:dbtc/repository/user_repository.dart';
+import 'package:dbtc/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -210,11 +211,11 @@ class CreateAccountButton extends StatelessWidget {
         'Create an Account',
       ),
       onPressed: () {
-//        Navigator.of(context).push(
-//          MaterialPageRoute(builder: (context) {
-//            return RegisterScreen(userRepository: _userRepository);
-//          }),
-//        );
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) {
+            return SignupScreen();
+          }),
+        );
       },
     );
   }
