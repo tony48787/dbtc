@@ -27,6 +27,9 @@ class App extends StatelessWidget {
         BlocProvider<AuthBloc>(
           builder: (context) => AuthBloc(userRepository: UserRepository()),
         ),
+        BlocProvider<HabitBloc>(
+          builder: (context) => HabitBloc(habitRepository: HabitRepository()),
+        )
       ],
       child: RepositoryProvider(
         builder: (context) => UserRepository(),
@@ -69,10 +72,7 @@ class App extends StatelessWidget {
 
   Widget _buildWithAuth(BuildContext context, AuthState state) {
     if (state is Authenticated) {
-      return BlocProvider<HabitBloc>(
-          builder: (context) => HabitBloc(habitRepository: HabitRepository(state.user.id)),
-          child: MainScreen()
-      );
+      return MainScreen();
     } else if (state is Unauthenticated) {
       return LoginScreen();
     } else {

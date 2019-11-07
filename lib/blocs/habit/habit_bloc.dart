@@ -19,7 +19,7 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
   @override
   Stream<HabitState> mapEventToState(HabitEvent event) async* {
     if (event is LoadHabits) {
-      yield* _mapLoadHabitsToState();
+      yield* _mapLoadHabitsToState(event);
     } else if (event is HabitsUpdated) {
       yield* _mapHabitsUpdatedToState(event);
     } else if (event is UpdateHabit) {
@@ -31,9 +31,9 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
     }
   }
 
-  Stream<HabitState> _mapLoadHabitsToState() async* {
+  Stream<HabitState> _mapLoadHabitsToState(LoadHabits event) async* {
     _habitsSubscription?.cancel();
-    _habitsSubscription = _habitRepository.habits().listen(
+    _habitsSubscription = _habitRepository.habits(event.userId).listen(
         (habits) => add(HabitsUpdated(habits))
     );
   }
@@ -43,15 +43,15 @@ class HabitBloc extends Bloc<HabitEvent, HabitState> {
   }
 
   Stream<HabitState> _mapUpdateHabitToState(UpdateHabit event) async* {
-    _habitRepository.updateHabit(event.updatedHabit);
+    _habitRepository.updateHabit(event.userId, event.updatedHabit);
   }
 
   Stream<HabitState> _mapAddHabitToState(AddHabit event) async* {
-    _habitRepository.addNewHabit(event.habit);
+    _habitRepository.addNewHabit(event.userId, event.habit);
   }
 
   Stream<HabitState> _mapDeleteHabitToState(DeleteHabit event) async* {
-    _habitRepository.deleteHabit(event.habitId);
+    _habitRepository.deleteHabit(event.userId, event.habitId);
   }
 
 

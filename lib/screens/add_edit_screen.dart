@@ -1,3 +1,4 @@
+import 'package:dbtc/blocs/auth/auth.dart';
 import 'package:dbtc/blocs/habit/habit.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/models/habit.dart';
@@ -9,44 +10,44 @@ typedef OnSaveCallback = Function(String habit, String note);
 class AddEditScreen extends StatefulWidget {
 
   final Habit habit;
-  final String id;
-  bool isEditing;
 
-  AddEditScreen({ this.habit, this.id }) {
-    isEditing = habit != null;
-  }
+  AddEditScreen({ this.habit });
 
   @override
-  _AddEditScreenState createState() => _AddEditScreenState();
-
-  void onSave(BuildContext context, String title, String description) {
-    if (isEditing) {
-      Habit newHabit = habit.copyWith(title: title, description: description);
-      BlocProvider.of<HabitBloc>(context).add(UpdateHabit(newHabit));
-    } else {
-      Habit newHabit = Habit(null, title, description, Map());
-      BlocProvider.of<HabitBloc>(context).add(AddHabit(newHabit));
-    }
-
-    Navigator.pop(context);
-  }
-
-  void onDelete(BuildContext context) {
-    BlocProvider.of<HabitBloc>(context).add(DeleteHabit(habit.id));
-
-    Navigator.pop(context);
-  }
+  _AddEditScreenState createState() => _AddEditScreenState(habit);
 
 }
 
 class _AddEditScreenState extends State<AddEditScreen> {
 
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final Habit habit;
 
   String _title;
   String _description;
 
-  bool get isEditing => widget.isEditing;
+  bool get isEditing => habit != null;
+  String get userId => (BlocProvider.of<AuthBloc>(context).state as Authenticated).user.id;
+
+  _AddEditScreenState(this.habit);
+
+  void onSave(String title, String description) {
+    if (isEditing) {
+      Habit newHabit = habit.copyWith(title: title, description: description);
+      BlocProvider.of<HabitBloc>(context).add(UpdateHabit(userId, newHabit));
+    } else {
+      Habit newHabit = Habit(null, title, description, Map());
+      BlocProvider.of<HabitBloc>(context).add(AddHabit(userId, newHabit));
+    }
+
+    Navigator.pop(context);
+  }
+
+  void onDelete() {
+    BlocProvider.of<HabitBloc>(context).add(DeleteHabit(userId, habit.id));
+
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +62,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
             onPressed: () {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
-                widget.onSave(context, _title, _description);
+                onSave(_title, _description);
               }
             },
             child: Text(AppLocalizations.of(context).translate(isEditing ? 'SAVE' : 'ADD').toUpperCase()),
@@ -106,9 +107,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                     child: RaisedButton(
                       color: Colors.redAccent,
                       textColor: Colors.white,
-                      onPressed: () {
-                        widget.onDelete(context);
-                      },
+                      onPressed: onDelete,
                       child: Text(AppLocalizations.of(context).translate('DELETE')),
                     ),
                   ) :

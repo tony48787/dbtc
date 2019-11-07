@@ -1,3 +1,4 @@
+import 'package:dbtc/blocs/auth/auth.dart';
 import 'package:dbtc/blocs/habit/habit.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/screens/calendar_sub_screen.dart';
@@ -30,9 +31,14 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    BlocProvider.of<HabitBloc>(context).add(LoadHabits());
+  void initState() {
+    super.initState();
+    String userId = (BlocProvider.of<AuthBloc>(context).state as Authenticated).user.id;
+    BlocProvider.of<HabitBloc>(context).add(LoadHabits(userId));
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate('DAILY')),

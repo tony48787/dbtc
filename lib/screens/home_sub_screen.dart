@@ -1,3 +1,4 @@
+import 'package:dbtc/blocs/auth/auth.dart';
 import 'package:dbtc/blocs/habit/habit.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/models/habit.dart';
@@ -7,16 +8,9 @@ import 'package:intl/intl.dart';
 
 import 'add_edit_screen.dart';
 
-class HomeSubScreen extends StatefulWidget {
+class HomeSubScreen extends StatelessWidget {
 
-  @override
-  _HomeSubScreenState createState() => _HomeSubScreenState();
-
-}
-
-class _HomeSubScreenState extends State<HomeSubScreen> {
-
-  void createRecord() {
+  void createRecord(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddEditScreen()),
@@ -28,7 +22,7 @@ class _HomeSubScreenState extends State<HomeSubScreen> {
     return Scaffold(
       body: Habits(),
       floatingActionButton: FloatingActionButton(
-        onPressed: createRecord,
+        onPressed: () => createRecord(context),
         tooltip: AppLocalizations.of(context).translate('NEW_HABIT'),
         child: Icon(Icons.add),
       ),
@@ -42,12 +36,14 @@ class Habits extends StatelessWidget {
   void editRecord(Habit habit, BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddEditScreen(habit: habit, id: habit.id)),
+      MaterialPageRoute(builder: (context) => AddEditScreen(habit: habit)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    String userId = (BlocProvider.of<AuthBloc>(context).state as Authenticated).user.id;
+
     return BlocBuilder<HabitBloc, HabitState>(
         builder: (context, state) {
           if (state is HabitsLoadedState) {
@@ -65,7 +61,7 @@ class Habits extends StatelessWidget {
                       isCompleted ? completedAtDate.remove(dateKey) : completedAtDate[dateKey] = true;
 
                       Habit newHabit = habit.copyWith(completedAtDate: completedAtDate);
-                      BlocProvider.of<HabitBloc>(context).add(UpdateHabit(newHabit));
+                      BlocProvider.of<HabitBloc>(context).add(UpdateHabit(userId, newHabit));
                     },
                   ),
                   title: Text(habit.title),
