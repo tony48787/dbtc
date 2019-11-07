@@ -1,3 +1,4 @@
+import 'package:dbtc/blocs/auth/auth.dart';
 import 'package:dbtc/blocs/theme/theme.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +12,7 @@ class SettingsSubScreen extends StatelessWidget {
       children: <Widget>[
         ListTile(
           leading: Icon(Icons.brightness_medium),
-          title: Text(AppLocalizations.of(context).translate('Dark Theme')),
+          title: Text(AppLocalizations.of(context).translate('DARK_THEME')),
           onTap: () {
             BlocProvider.of<ThemeBloc>(context).add(ThemeChanged());
           },
@@ -21,6 +22,13 @@ class SettingsSubScreen extends StatelessWidget {
           title: Text(AppLocalizations.of(context).translate('NOTIFICATION_TIME')),
           onTap: () {
             showNotificationDialog(context);
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.exit_to_app),
+          title: Text(AppLocalizations.of(context).translate('LOGOUT')),
+          onTap: () {
+            BlocProvider.of<AuthBloc>(context).add(LoggedOut());
           },
         ),
       ],

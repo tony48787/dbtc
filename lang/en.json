@@ -13,5 +13,6 @@
   "ADD": "Add",
   "SETTINGS": "Settings",
   "NOTIFICATION_TIME": "Notification Time",
-  "DARK_THEME": "Dark Theme"
+  "DARK_THEME": "Dark Theme",
+  "LOGOUT": "Logout"
 }
