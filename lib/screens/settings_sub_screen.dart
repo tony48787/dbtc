@@ -4,6 +4,7 @@ import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class SettingsSubScreen extends StatelessWidget {
   @override
@@ -58,8 +59,6 @@ class SettingsSubScreen extends StatelessWidget {
               child: Text(AppLocalizations.of(context).translate('SAVE')),
               onPressed: () {
                 Navigator.of(context).pop();
-
-//                _showNotificationWithoutSound();
               },
             ),
           ],
@@ -94,4 +93,5 @@ class SettingsSubScreen extends StatelessWidget {
       ,
     );
   }
+
 }

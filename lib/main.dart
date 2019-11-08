@@ -7,13 +7,18 @@ import 'package:dbtc/screens/login_screen.dart';
 import 'package:dbtc/screens/main_screen.dart';
 import 'package:dbtc/screens/splash_screen.dart';
 import 'package:dbtc/ui/app_theme.dart';
+import 'package:dbtc/utils/local_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'blocs/theme/theme.dart';
 
-void main() => runApp(App());
+void main() {
+  LocalNotification.instance.scheduleDailyNotification();
+
+  runApp(App());
+}
 
 class App extends StatelessWidget {
 
