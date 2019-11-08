@@ -65,3 +65,11 @@ class LoginWithCredentialsPressed extends LoginEvent {
     return 'LoginWithCredentialsPressed { email: $email, password: $password }';
   }
 }
+
+class LoginAnonymouslyPressed extends LoginEvent {
+  @override
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'LoginAnonymouslyPressed';
+}

@@ -126,9 +126,7 @@ class _LoginFormState extends State<LoginForm> {
                       ),
                       FullWidthFlatButton(
                         text: AppLocalizations.of(context).translate('CONTINUE_AS_GUEST'),
-                        onPressed: () {
-
-                        },
+                        onPressed: _onContinueAsGuest,
                       ),
                     ],
                   ),
@@ -167,5 +165,9 @@ class _LoginFormState extends State<LoginForm> {
         password: _passwordController.text,
       ),
     );
+  }
+
+  void _onContinueAsGuest() {
+    _loginBloc.add(LoginAnonymouslyPressed());
   }
 }

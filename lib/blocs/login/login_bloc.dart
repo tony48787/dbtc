@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:dbtc/models/user.dart';
 import 'package:dbtc/repository/user_repository.dart';
 import 'package:dbtc/utils/validators.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -36,13 +38,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield* _mapEmailChangedToState(event.email);
     } else if (event is PasswordChanged) {
       yield* _mapPasswordChangedToState(event.password);
-    } else if (event is LoginWithGooglePressed) {
-//      yield* _mapLoginWithGooglePressedToState();
     } else if (event is LoginWithCredentialsPressed) {
       yield* _mapLoginWithCredentialsPressedToState(
         email: event.email,
         password: event.password,
       );
+    } else if (event is LoginAnonymouslyPressed) {
+      yield* _mapLoginAnonymouslyPressedToState();
     }
   }
 
@@ -58,15 +60,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     );
   }
 
-//  Stream<LoginState> _mapLoginWithGooglePressedToState() async* {
-//    try {
-//      await _userRepository.signInWithGoogle();
-//      yield LoginState.success();
-//    } catch (_) {
-//      yield LoginState.failure();
-//    }
-//  }
-
   Stream<LoginState> _mapLoginWithCredentialsPressedToState({
     String email,
     String password,
@@ -74,6 +67,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     yield LoginState.loading();
     try {
       await _userRepository.signInWithCredentials(email, password);
+      yield LoginState.success();
+    } catch (_) {
+      yield LoginState.failure();
+    }
+  }
+
+  Stream<LoginState> _mapLoginAnonymouslyPressedToState() async* {
+    try {
+      AuthResult authResult = await _userRepository.signInAnonymously();
+      await _userRepository.setUser(User(authResult.user.uid, "Guest", "Guest", isAnonymous: true));
       yield LoginState.success();
     } catch (_) {
       yield LoginState.failure();

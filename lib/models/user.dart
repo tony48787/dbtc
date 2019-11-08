@@ -6,21 +6,23 @@ class User {
   final String lastName;
   DateTime createdAt;
   DateTime updatedAt;
+  bool isAnonymous;
 
-  User(this.id, this.firstName, this.lastName, { this.createdAt, this.updatedAt });
+  User(this.id, this.firstName, this.lastName, { this.createdAt, this.updatedAt, this.isAnonymous = false });
 
   @override
   String toString() {
     return 'User { id: $id, firstName: $firstName, lastName: $lastName }';
   }
 
-  User copyWith({ String id, String firstName, String lastName, DateTime createdAt, DateTime updatedAt }) {
+  User copyWith({ String id, String firstName, String lastName, DateTime createdAt, DateTime updatedAt, bool isAnonymous }) {
     return User(
       id ?? this.id,
       firstName ?? this.firstName,
       lastName ?? this.lastName,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      isAnonymous: isAnonymous ?? this.isAnonymous,
     );
   }
 
@@ -32,6 +34,7 @@ class User {
       data['lastName'],
       createdAt: data['createdAt'].toDate(),
       updatedAt: data['updatedAt'].toDate(),
+      isAnonymous: data['isAnonymous'],
     );
   }
 
@@ -39,9 +42,14 @@ class User {
     Map<String, Object> document = {
       'firstName': user.firstName,
       'lastName': user.lastName,
-      'updatedAt': DateTime.now()
+      'updatedAt': DateTime.now(),
     };
-    if (isAdd) document['createdAt'] = DateTime.now();
+
+    if (isAdd) {
+      document['createdAt'] = DateTime.now();
+      document['isAnonymous'] = user.isAnonymous;
+    }
+
     return document;
   }
 }
