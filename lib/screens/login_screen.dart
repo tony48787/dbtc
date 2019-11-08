@@ -1,7 +1,9 @@
 import 'package:dbtc/blocs/auth/auth.dart';
 import 'package:dbtc/blocs/login/login.dart';
+import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/repository/user_repository.dart';
 import 'package:dbtc/screens/signup_screen.dart';
+import 'package:dbtc/widgets/full_width_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,7 +13,7 @@ class LoginScreen extends StatelessWidget {
     final UserRepository _userRepository = RepositoryProvider.of<UserRepository>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).translate('LOGIN'))),
       body: BlocProvider<LoginBloc>(
         builder: (context) => LoginBloc(userRepository: _userRepository),
         child: LoginForm(),
@@ -34,7 +36,7 @@ class _LoginFormState extends State<LoginForm> {
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
   bool isLoginButtonEnabled(LoginState state) {
-    return state.isFormValid && isPopulated && !state.isSubmitting;
+    return state.isFormValid && isPopulated;
   }
 
   @override
@@ -63,21 +65,6 @@ class _LoginFormState extends State<LoginForm> {
               ),
             );
         }
-        if (state.isSubmitting) {
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Logging In...'),
-                    CircularProgressIndicator(),
-                  ],
-                ),
-              ),
-            );
-        }
         if (state.isSuccess) {
           BlocProvider.of<AuthBloc>(context).add(LoggedIn());
         }
@@ -86,15 +73,15 @@ class _LoginFormState extends State<LoginForm> {
         bloc: _loginBloc,
         builder: (BuildContext context, LoginState state) {
           return Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.all(16),
             child: Form(
               child: ListView(
                 children: <Widget>[
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.email),
-                      labelText: 'Email',
+                      border: OutlineInputBorder(),
+                      labelText: AppLocalizations.of(context).translate('EMAIL'),
                     ),
                     autovalidate: true,
                     autocorrect: false,
@@ -102,11 +89,12 @@ class _LoginFormState extends State<LoginForm> {
                       return !state.isEmailValid ? 'Invalid Email' : null;
                     },
                   ),
+                  SizedBox(height: 16),
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.lock),
-                      labelText: 'Password',
+                      border: OutlineInputBorder(),
+                      labelText: AppLocalizations.of(context).translate('PASSWORD'),
                     ),
                     obscureText: true,
                     autovalidate: true,
@@ -115,20 +103,28 @@ class _LoginFormState extends State<LoginForm> {
                       return !state.isPasswordValid ? 'Invalid Password' : null;
                     },
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        LoginButton(
-                          onPressed: isLoginButtonEnabled(state)
-                              ? _onFormSubmitted
-                              : null,
-                        ),
-//                        GoogleLoginButton(),
-                        CreateAccountButton(),
-                      ],
-                    ),
+                  SizedBox(height: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      FullWidthRaisedButton(
+                        text: AppLocalizations.of(context).translate('LOGIN'),
+                        onPressed: isLoginButtonEnabled(state)
+                            ? _onFormSubmitted
+                            : null,
+                        isLoading: state.isSubmitting,
+                      ),
+                      FullWidthFlatButton(
+                        text: AppLocalizations.of(context).translate('CREATE_ACCOUNT'),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) {
+                              return SignupScreen();
+                            }),
+                          );
+                        },
+                      )
+                    ],
                   ),
                 ],
               ),
@@ -164,43 +160,6 @@ class _LoginFormState extends State<LoginForm> {
         email: _emailController.text,
         password: _passwordController.text,
       ),
-    );
-  }
-}
-
-class LoginButton extends StatelessWidget {
-  final VoidCallback _onPressed;
-
-  LoginButton({Key key, VoidCallback onPressed})
-      : _onPressed = onPressed,
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30.0),
-      ),
-      onPressed: _onPressed,
-      child: Text('Login'),
-    );
-  }
-}
-
-class CreateAccountButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return FlatButton(
-      child: Text(
-        'Create an Account',
-      ),
-      onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) {
-            return SignupScreen();
-          }),
-        );
-      },
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:dbtc/blocs/auth/auth.dart';
 import 'package:dbtc/blocs/signup/signup.dart';
+import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/repository/user_repository.dart';
+import 'package:dbtc/widgets/full_width_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,7 +12,7 @@ class SignupScreen extends StatelessWidget {
     final UserRepository _userRepository = RepositoryProvider.of<UserRepository>(context);
     
     return Scaffold(
-      appBar: AppBar(title: Text('Signup')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).translate('SIGNUP'))),
       body: Center(
         child: BlocProvider<SignupBloc>(
           builder: (context) => SignupBloc(userRepository: _userRepository),
@@ -40,7 +42,7 @@ class _SignupFormState extends State<SignupForm> {
           && _passwordController.text.isNotEmpty;
 
   bool isSignupButtonEnabled(SignupState state) {
-    return state.isFormValid && isPopulated && !state.isSubmitting;
+    return state.isFormValid && isPopulated;
   }
 
   @override
@@ -58,21 +60,6 @@ class _SignupFormState extends State<SignupForm> {
     return BlocListener(
       bloc: _registerBloc,
       listener: (BuildContext context, SignupState state) {
-        if (state.isSubmitting) {
-          Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Signing up...'),
-                    CircularProgressIndicator(),
-                  ],
-                ),
-              ),
-            );
-        }
         if (state.isSuccess) {
           BlocProvider.of<AuthBloc>(context).add(LoggedIn());
           Navigator.of(context).pop();
@@ -98,52 +85,62 @@ class _SignupFormState extends State<SignupForm> {
         bloc: _registerBloc,
         builder: (BuildContext context, SignupState state) {
           return Padding(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(16),
             child: Form(
               child: ListView(
                 children: <Widget>[
                   TextFormField(
                     controller: _firstNameController,
                     decoration: InputDecoration(
-                      labelText: 'First name'
+                      border: OutlineInputBorder(),
+                      labelText: AppLocalizations.of(context).translate('FIRST_NAME')
                     ),
                     autocorrect: false,
                     autovalidate: true,
                     validator: (_) => !state.isFirstNameValid ? 'Invalid first name' : null,
                   ),
+                  SizedBox(height: 16),
                   TextFormField(
                     controller: _lastNameController,
                     decoration: InputDecoration(
-                        labelText: 'Last name'
+                      border: OutlineInputBorder(),
+                      labelText: AppLocalizations.of(context).translate('LAST_NAME')
                     ),
                     autocorrect: false,
                     autovalidate: true,
                     validator: (_) => !state.isLastNameValid ? 'Invalid last name' : null,
                   ),
+                  SizedBox(height: 16),
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                      labelText: 'Email',
+                      border: OutlineInputBorder(),
+                      labelText: AppLocalizations.of(context).translate('EMAIL'),
                     ),
                     autocorrect: false,
                     autovalidate: true,
                     validator: (_) => !state.isEmailValid ? 'Invalid Email' : null,
                   ),
+                  SizedBox(height: 16),
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      labelText: 'Password',
+                      border: OutlineInputBorder(),
+                      labelText: AppLocalizations.of(context).translate('PASSWORD'),
                     ),
                     obscureText: true,
                     autocorrect: false,
                     autovalidate: true,
                     validator: (_) => !state.isPasswordValid ? 'Invalid Password' : null,
                   ),
-                  SignupButton(
+                  SizedBox(height: 16),
+                  FullWidthRaisedButton(
+                    text: AppLocalizations.of(context).translate('SIGNUP'),
                     onPressed: isSignupButtonEnabled(state)
-                        ? _onFormSubmitted
-                        : null,
-                  ),
+                          ? _onFormSubmitted
+                          : null,
+                    isLoading: state.isSubmitting,
+                  )
                 ],
               ),
             ),
@@ -194,25 +191,6 @@ class _SignupFormState extends State<SignupForm> {
         email: _emailController.text,
         password: _passwordController.text,
       ),
-    );
-  }
-}
-
-class SignupButton extends StatelessWidget {
-  final VoidCallback _onPressed;
-
-  SignupButton({Key key, VoidCallback onPressed})
-      : _onPressed = onPressed,
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30.0),
-      ),
-      onPressed: _onPressed,
-      child: Text('Signup'),
     );
   }
 }

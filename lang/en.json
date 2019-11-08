@@ -14,5 +14,13 @@
   "SETTINGS": "Settings",
   "NOTIFICATION_TIME": "Notification Time",
   "DARK_THEME": "Dark Theme",
-  "LOGOUT": "Logout"
+  "LOGOUT": "Logout",
+  "LOGIN": "Login",
+  "CREATE_ACCOUNT": "Create account",
+  "PASSWORD": "Password",
+  "EMAIL": "Email",
+  "SIGNUP": "Signup",
+  "FIRST_NAME": "First name",
+  "LAST_NAME": "Last name",
+  "THIS_IS_REQUIRED": "This is required"
 }

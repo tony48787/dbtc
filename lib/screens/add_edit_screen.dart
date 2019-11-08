@@ -2,6 +2,7 @@ import 'package:dbtc/blocs/auth/auth.dart';
 import 'package:dbtc/blocs/habit/habit.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/models/habit.dart';
+import 'package:dbtc/widgets/full_width_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -71,7 +72,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: ListView(
@@ -85,7 +86,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                 ),
                 validator: (val) {
                   return val.trim().isEmpty
-                      ? "This is required"
+                      ? AppLocalizations.of(context).translate('THIS_IS_REQUIRED')
                       : null;
                 },
                 onSaved: (value) => _title = value,
@@ -102,16 +103,10 @@ class _AddEditScreenState extends State<AddEditScreen> {
               ),
               SizedBox(height: 16),
               isEditing ?
-                  SizedBox(
-                    width: double.infinity,
-                    child: RaisedButton(
-                      color: Colors.redAccent,
-                      textColor: Colors.white,
-                      onPressed: onDelete,
-                      child: Text(AppLocalizations.of(context).translate('DELETE')),
-                    ),
-                  ) :
-                new Container(width: 0, height: 0)
+                  FullWidthRaisedButton(
+                    onPressed: onDelete,
+                    text: AppLocalizations.of(context).translate('DELETE'),
+                  ) : new Container(width: 0, height: 0)
             ],
           ),
         ),

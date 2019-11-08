@@ -18,7 +18,7 @@ class SettingsSubScreen extends StatelessWidget {
           },
         ),
         ListTile(
-          leading: Icon(Icons.brightness_medium),
+          leading: Icon(Icons.notifications),
           title: Text(AppLocalizations.of(context).translate('NOTIFICATION_TIME')),
           onTap: () {
             showNotificationDialog(context);
