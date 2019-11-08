@@ -43,13 +43,10 @@ class User {
       'firstName': user.firstName,
       'lastName': user.lastName,
       'updatedAt': DateTime.now(),
+      'isAnonymous': user.isAnonymous,
     };
 
-    if (isAdd) {
-      document['createdAt'] = DateTime.now();
-      document['isAnonymous'] = user.isAnonymous;
-    }
-
+    if (isAdd) document['createdAt'] = DateTime.now();
     return document;
   }
 }

@@ -106,7 +106,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                   FullWidthRaisedButton(
                     onPressed: onDelete,
                     text: AppLocalizations.of(context).translate('DELETE'),
-                  ) : new Container(width: 0, height: 0)
+                  ) : Container(width: 0, height: 0)
             ],
           ),
         ),

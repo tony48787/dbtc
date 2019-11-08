@@ -1,6 +1,9 @@
 import 'package:dbtc/blocs/auth/auth.dart';
 import 'package:dbtc/blocs/theme/theme.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
+import 'package:dbtc/models/user.dart';
+import 'package:dbtc/screens/signup_screen.dart';
+import 'package:dbtc/widgets/dialogs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,30 +11,58 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SettingsSubScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        ListTile(
-          leading: Icon(Icons.brightness_medium),
-          title: Text(AppLocalizations.of(context).translate('DARK_THEME')),
-          onTap: () {
-            BlocProvider.of<ThemeBloc>(context).add(ThemeChanged());
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.notifications),
-          title: Text(AppLocalizations.of(context).translate('NOTIFICATION_TIME')),
-          onTap: () {
-            showNotificationDialog(context);
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.exit_to_app),
-          title: Text(AppLocalizations.of(context).translate('LOGOUT')),
-          onTap: () {
-            BlocProvider.of<AuthBloc>(context).add(LoggedOut());
-          },
-        ),
-      ],
+    User user = (BlocProvider.of<AuthBloc>(context).state as Authenticated).user;
+
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        return ListView(
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.brightness_medium),
+              title: Text(AppLocalizations.of(context).translate('DARK_THEME')),
+              onTap: () {
+                BlocProvider.of<ThemeBloc>(context).add(ThemeChanged());
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.notifications),
+              title: Text(AppLocalizations.of(context).translate('NOTIFICATION_TIME')),
+              onTap: () {
+                showNotificationDialog(context);
+              },
+            ),
+            user.isAnonymous ?
+            ListTile(
+              leading: Icon(Icons.cached),
+              title: Text(AppLocalizations.of(context).translate('CONVERT_GUEST_ACCOUNT')),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) {
+                    return SignupScreen();
+                  }),
+                );
+              },
+            ) : Container(width: 0, height: 0),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text(AppLocalizations.of(context).translate('LOGOUT')),
+              onTap: () {
+                showDialog(context: context, builder: (context) => SimpleAlertDialog(
+                  titleKey: 'LOGOUT',
+                  contentKey: user.isAnonymous ? 'LOGOUT_CONFIRMATION_GUEST' : 'LOGOUT_CONFIRMATION',
+                  actions: [
+                    AlertDialogAction(titleKey: 'CANCEL'),
+                    AlertDialogAction(
+                      titleKey: 'LOGOUT',
+                      onPressed: () => BlocProvider.of<AuthBloc>(context).add(LoggedOut()),
+                    )
+                  ],
+                ));
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

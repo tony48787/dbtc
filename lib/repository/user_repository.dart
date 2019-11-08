@@ -25,18 +25,28 @@ class UserRepository {
     );
   }
 
+  AuthCredential getCredential({String email, String password}) {
+    return EmailAuthProvider.getCredential(
+      email: email,
+      password: password,
+    );
+  }
+
   Future<void> signOut() async {
     return _firebaseAuth.signOut();
   }
 
   Future<bool> isSignedIn() async {
-    final currentUser = await _firebaseAuth.currentUser();
+    final currentUser = await getFirebaseUser();
     return currentUser != null;
+  }
+
+  Future<FirebaseUser> getFirebaseUser() async {
+    return _firebaseAuth.currentUser();
   }
 
   Future<User> getUser() async {
     FirebaseUser firebaseUser = await _firebaseAuth.currentUser();
-    print(firebaseUser);
     DocumentSnapshot snapshot = await _usersCollection.document(firebaseUser.uid).get();
     return User.fromSnapshot(snapshot);
   }
