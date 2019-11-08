@@ -90,11 +90,22 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       ) async* {
     yield SignupState.loading();
     try {
-      AuthResult authResult = await _userRepository.signUp(
-        email: email,
-        password: password,
-      );
-      await _userRepository.setUser(User(authResult.user.uid, firstName, lastName));
+      FirebaseUser firebaseUser = await _userRepository.getFirebaseUser();
+
+      if (firebaseUser != null) {
+        AuthCredential authCredential = _userRepository.getCredential(email: email, password: password);
+        AuthResult authResult = await firebaseUser.linkWithCredential(authCredential);
+
+        await _userRepository.updateUser(User(authResult.user.uid, firstName, lastName));
+      } else {
+        AuthResult authResult = await _userRepository.signUp(
+          email: email,
+          password: password,
+        );
+
+        await _userRepository.setUser(User(authResult.user.uid, firstName, lastName));
+      }
+
       yield SignupState.success();
     } catch (_) {
       yield SignupState.failure();

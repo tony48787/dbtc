@@ -14,8 +14,19 @@ class UserRepository {
     );
   }
 
+  Future<AuthResult> signInAnonymously() {
+    return _firebaseAuth.signInAnonymously();
+  }
+
   Future<AuthResult> signUp({String email, String password}) async {
     return await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  AuthCredential getCredential({String email, String password}) {
+    return EmailAuthProvider.getCredential(
       email: email,
       password: password,
     );
@@ -26,8 +37,12 @@ class UserRepository {
   }
 
   Future<bool> isSignedIn() async {
-    final currentUser = await _firebaseAuth.currentUser();
+    final currentUser = await getFirebaseUser();
     return currentUser != null;
+  }
+
+  Future<FirebaseUser> getFirebaseUser() async {
+    return _firebaseAuth.currentUser();
   }
 
   Future<User> getUser() async {
