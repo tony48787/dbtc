@@ -15,8 +15,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'blocs/theme/theme.dart';
 
 void main() {
-  LocalNotification.instance.scheduleDailyNotification();
-
   runApp(App());
 }
 
@@ -76,6 +74,9 @@ class App extends StatelessWidget {
   }
 
   Widget _buildWithAuth(BuildContext context, AuthState state) {
+    LocalNotification.init(context);
+    LocalNotification.instance.scheduleDailyNotification();
+
     if (state is Authenticated) {
       return MainScreen();
     } else if (state is Unauthenticated) {

@@ -1,6 +1,8 @@
 import 'package:dbtc/blocs/auth/auth.dart';
 import 'package:dbtc/blocs/theme/theme.dart';
 import 'package:dbtc/localizations/app_localizations.dart';
+import 'package:dbtc/utils/local_notification.dart';
+import 'package:dbtc/utils/local_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,6 +60,10 @@ class SettingsSubScreen extends StatelessWidget {
             FlatButton(
               child: Text(AppLocalizations.of(context).translate('SAVE')),
               onPressed: () {
+                LocalStorage.instance.setItem(LS_KEY.NOTIFICATION_HOUR, _dateTime.hour);
+                LocalStorage.instance.setItem(LS_KEY.NOTIFICATION_MINUTE, _dateTime.minute);
+                LocalNotification.instance.scheduleDailyNotification();
+
                 Navigator.of(context).pop();
               },
             ),

@@ -1,6 +1,6 @@
-import 'package:cron/cron.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dbtc/localizations/app_localizations.dart';
+import 'package:dbtc/utils/local_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class LocalNotification {
@@ -12,6 +12,11 @@ class LocalNotification {
   }
 
   static final LocalNotification instance = LocalNotification._();
+
+  static init(BuildContext context) {
+    instance.context = context;
+  }
+
 
   void initPlugin() {
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
@@ -30,7 +35,7 @@ class LocalNotification {
     }
   }
 
-  Future showNotification() async {
+  Future showNotification(String title, String body, {String payload}) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your channel id', 'your channel name', 'your channel description',
         importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
@@ -38,12 +43,15 @@ class LocalNotification {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        0, 'plain title', 'plain body', platformChannelSpecifics,
+        0, title, body, platformChannelSpecifics,
         payload: 'item x');
   }
 
   Future scheduleDailyNotification() async {
-    var time = new Time(0, 0, 0);
+    var userDefinedHour = await LocalStorage.instance.getItem(LS_KEY.NOTIFICATION_HOUR);
+    var userDefinedMinute = await LocalStorage.instance.getItem(LS_KEY.NOTIFICATION_MINUTE);
+
+    var time = new Time(userDefinedHour, userDefinedMinute, 0);
 
     var androidPlatformChannelSpecifics =
     new AndroidNotificationDetails('repeatDailyAtTime channel id',
@@ -56,11 +64,9 @@ class LocalNotification {
 
     await flutterLocalNotificationsPlugin.showDailyAtTime(
         0,
-        'Remember your habits?',
-        'Time to finish it by today!',
+        AppLocalizations.of(context).translate('DAILY_REMAINDER_TITLE'),
+        AppLocalizations.of(context).translate('DAILY_REMAINDER_BODY'),
         time,
         platformChannelSpecifics);
   }
-}
-
 }
