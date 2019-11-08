@@ -123,7 +123,13 @@ class _LoginFormState extends State<LoginForm> {
                             }),
                           );
                         },
-                      )
+                      ),
+                      FullWidthFlatButton(
+                        text: AppLocalizations.of(context).translate('CONTINUE_AS_GUEST'),
+                        onPressed: () {
+
+                        },
+                      ),
                     ],
                   ),
                 ],

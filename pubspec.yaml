@@ -18,6 +18,7 @@ dependencies:
   flutter_bloc: ^1.0.0
   bloc: ^1.0.0
   table_calendar: ^2.1.0
+  flutter_local_notifications:
   flutter_localizations:
       sdk: flutter
 

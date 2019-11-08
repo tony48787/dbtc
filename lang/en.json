@@ -22,5 +22,6 @@
   "SIGNUP": "Signup",
   "FIRST_NAME": "First name",
   "LAST_NAME": "Last name",
-  "THIS_IS_REQUIRED": "This is required"
+  "THIS_IS_REQUIRED": "This is required",
+  "CONTINUE_AS_GUEST": "Continue as guest"
 }
