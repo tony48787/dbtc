@@ -21,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _children = [
     HomeSubScreen(),
     CalendarSubScreen(),
-    SettingsSubScreen()
+    SettingsSubScreen(),
   ];
 
   void onTabTapped(int index) {
@@ -40,9 +40,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate('DAILY')),
-      ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,

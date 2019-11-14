@@ -1,4 +1,5 @@
 import 'package:dbtc/blocs/habit/habit.dart';
+import 'package:dbtc/localizations/app_localizations.dart';
 import 'package:dbtc/models/habit.dart';
 import 'package:dbtc/screens/habit_list_screen.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,9 @@ class _CalendarSubScreenState extends State<CalendarSubScreen> with TickerProvid
   Widget _buildWithHabit(BuildContext context, HabitState state) {
     if (state is HabitsLoadedState) {
       return Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context).translate('DAILY')),
+        ),
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[

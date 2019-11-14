@@ -47,6 +47,7 @@ class App extends StatelessWidget {
     BlocProvider.of<AuthBloc>(context).add(AppStarted());
 
     return  MaterialApp(
+      debugShowCheckedModeBanner: false,
       onGenerateTitle: (context) => AppLocalizations.of(context).translate('APP_TITLE'),
       theme: appThemeData[state.appTheme],
       localizationsDelegates: [

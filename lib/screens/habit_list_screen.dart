@@ -22,7 +22,10 @@ class HabitListScreen extends StatelessWidget {
           bool isCompleted = completedAtDate[dateKey] != null && completedAtDate[dateKey];
 
           return ListTile(
-            leading: Icon(isCompleted ? Icons.check_circle : Icons.check_circle_outline),
+            leading: Icon(
+              isCompleted ? Icons.check_circle : Icons.check_circle_outline,
+              color: Theme.of(context).primaryColor,
+            ),
             title: Text(habit.title),
             subtitle: Text(habit.description),
           );

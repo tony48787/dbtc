@@ -27,8 +27,7 @@
   "CANCEL": "Cancel",
   "LOGOUT_CONFIRMATION": "Are you sure you want to logout?",
   "LOGOUT_CONFIRMATION_GUEST": "You are using a guest account, logging out will clear all your data. Are you sure you want to continue?",
-  "CONVERT_GUEST_ACCOUNT": "Convert guest account"
-  "CONTINUE_AS_GUEST": "Continue as guest",
+  "CONVERT_GUEST_ACCOUNT": "Convert guest account",
   "DAILY_REMAINDER_TITLE": "Remember your habits?",
   "DAILY_REMAINDER_BODY": "Time to finish it by today!"
 }

@@ -18,52 +18,57 @@ class SettingsSubScreen extends StatelessWidget {
 
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        return ListView(
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.brightness_medium),
-              title: Text(AppLocalizations.of(context).translate('DARK_THEME')),
-              onTap: () {
-                BlocProvider.of<ThemeBloc>(context).add(ThemeChanged());
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.notifications),
-              title: Text(AppLocalizations.of(context).translate('NOTIFICATION_TIME')),
-              onTap: () {
-                showNotificationDialog(context);
-              },
-            ),
-            user.isAnonymous ?
-            ListTile(
-              leading: Icon(Icons.cached),
-              title: Text(AppLocalizations.of(context).translate('CONVERT_GUEST_ACCOUNT')),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) {
-                    return SignupScreen();
-                  }),
-                );
-              },
-            ) : Container(width: 0, height: 0),
-            ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text(AppLocalizations.of(context).translate('LOGOUT')),
-              onTap: () {
-                showDialog(context: context, builder: (context) => SimpleAlertDialog(
-                  titleKey: 'LOGOUT',
-                  contentKey: user.isAnonymous ? 'LOGOUT_CONFIRMATION_GUEST' : 'LOGOUT_CONFIRMATION',
-                  actions: [
-                    AlertDialogAction(titleKey: 'CANCEL'),
-                    AlertDialogAction(
-                      titleKey: 'LOGOUT',
-                      onPressed: () => BlocProvider.of<AuthBloc>(context).add(LoggedOut()),
-                    )
-                  ],
-                ));
-              },
-            ),
-          ],
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(AppLocalizations.of(context).translate('DAILY')),
+          ),
+          body: ListView(
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.brightness_medium),
+                title: Text(AppLocalizations.of(context).translate('DARK_THEME')),
+                onTap: () {
+                  BlocProvider.of<ThemeBloc>(context).add(ThemeChanged());
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.notifications),
+                title: Text(AppLocalizations.of(context).translate('NOTIFICATION_TIME')),
+                onTap: () {
+                  showNotificationDialog(context);
+                },
+              ),
+              user.isAnonymous ?
+              ListTile(
+                leading: Icon(Icons.cached),
+                title: Text(AppLocalizations.of(context).translate('CONVERT_GUEST_ACCOUNT')),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) {
+                      return SignupScreen();
+                    }),
+                  );
+                },
+              ) : Container(width: 0, height: 0),
+              ListTile(
+                leading: Icon(Icons.exit_to_app),
+                title: Text(AppLocalizations.of(context).translate('LOGOUT')),
+                onTap: () {
+                  showDialog(context: context, builder: (context) => SimpleAlertDialog(
+                    titleKey: 'LOGOUT',
+                    contentKey: user.isAnonymous ? 'LOGOUT_CONFIRMATION_GUEST' : 'LOGOUT_CONFIRMATION',
+                    actions: [
+                      AlertDialogAction(titleKey: 'CANCEL'),
+                      AlertDialogAction(
+                        titleKey: 'LOGOUT',
+                        onPressed: () => BlocProvider.of<AuthBloc>(context).add(LoggedOut()),
+                      )
+                    ],
+                  ));
+                },
+              ),
+            ],
+          ),
         );
       },
     );
